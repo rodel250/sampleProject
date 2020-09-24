@@ -1,0 +1,574 @@
+
+    {% block headerinclude %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    h5 {
+        font-size: 25px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        color:white;
+    }
+    .btnDel {
+        background-color: red; /* Blue background */
+        border: none; /* Remove borders */
+        color: white; /* White text */
+        padding: 5px 16px; /* Some padding */
+        font-size: 16px; /* Set a font size */
+        cursor: pointer; /* Mouse pointer on hover */
+    }
+
+    /* Darker background on mouse-over */
+    .btnDel:hover {
+      background-color: darkred;
+    }
+
+    .btnView {
+        background-color: #4CAF50; /* Blue background */
+        border: none; /* Remove borders */
+        color: white; /* White text */
+        padding: 5px 16px; /* Some padding */
+        font-size: 16px; /* Set a font size */
+        cursor: pointer; /* Mouse pointer on hover */
+        margin: 0px 5px;
+
+    }
+    .Dashboard{
+    border: 2px solid black;
+    margin: 40px 300px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: white;
+    }
+    h1{
+        background-color: black;
+        color:white;
+    }
+
+    /* Darker background on mouse-over */
+    .btnView:hover {
+      background-color: darkgreen;
+    }
+    div.dt-buttons {
+    margin-left: 560px;
+    }
+    body{
+        background-image:url(https://st.depositphotos.com/3470617/4869/v/950/depositphotos_48698099-stock-illustration-medicine-icons-pattern.jpg);
+    }
+
+    .modal-footer {
+        align-items: center;
+
+    }
+    .btn-primary {
+        padding: 5px 15px;
+        border: 1px solid #4CAF50;
+        background-color: #4CAF50;
+        color: white;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus {
+        background-color: darkgreen;
+      }
+
+      .btn-secondary {
+        padding: 5px 15px;
+        background-color: darkgrey;
+      }
+
+      .btn-secondary:hover {
+        background-color: grey;
+        border: 1px solid black;
+
+      }
+    
+    </style>
+    <title>Dashboard</title>
+    {% endblock headerinclude %}
+
+    {% block footerinclude %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script scr="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+
+
+    
+    
+    <script type="text/javascript">
+           $(document).ready(function(){
+        $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var min = $('#min').datepicker("getDate");
+            console.log('min', min);
+            var max = $('#max').datepicker("getDate");
+            var startDate = new Date(data[0]);
+            if (min == null && max == null) { return true; }
+            if (min == null && startDate <= max) { return true;}
+            if(max == null && startDate >= min) {return true;}
+            if (startDate <= max && startDate >= min) { return true; }
+            return false;
+        }
+        );
+
+       
+            $("#min").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+            $("#max").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+            var table = $('#example').DataTable({
+                dom: 'Blfrtip',
+                buttons: [
+                    {extend: 'excel', text: 'Export to excel'}
+                ],
+            });
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $('#min, #max').change(function () {
+                table.draw();
+            });
+        });
+    </script>   
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+     $.fn.dataTable.ext.search.push(
+     function (settings, data, dataIndex) {
+         var min1 = $('#min1').datepicker("getDate");
+         console.log('min', min);
+         var max1 = $('#max1').datepicker("getDate");
+         var startDate = new Date(data[0]);
+         if (min1 == null && max1 == null) { return true; }
+         if (min1 == null && startDate <= max1) { return true;}
+         if(max1 == null && startDate >= min1) {return true;}
+         if (startDate <= max1 && startDate >= min1) { return true; }
+         return false;
+     }
+     );
+
+    
+         $("#min1").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+         $("#max1").datepicker({ onSelect: function () { table.draw(); }, changeMonth: true, changeYear: true });
+         var table = $('#example1').DataTable({
+            dom: 'Blfrtip',
+        buttons: [
+            {extend: 'excel', text: 'Export to excel'}
+        ],
+         });
+         
+         // Event listener to the two range filtering inputs to redraw on input
+         $('#min1, #max1').change(function () {
+             table.draw();
+         });
+         
+         
+     });
+     
+ </script> 
+ {% endblock footerinclude %}
+ 
+ {% block content %}
+  <div>
+    <div class="Dashboard">
+        <h1 align="center">Customer Report Summary</h1>
+        <table border="0" cellspacing="5" cellpadding="5" align="center">
+            <tbody>
+                <tr>
+                    <td>From:</td>
+                    <td><input name="min" id="min" type="text"></td>
+                    <td>To:</td>
+                    <td><input name="max" id="max" type="text"></td>
+                    <td><a href="http://127.0.0.1:8000/Medicine/dashboard" class="btn btn-success">Add Customer</a></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <table width="100%" class="table-striped table-bordered table-sm" id="example" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Date Registered</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Date of Birth</th>
+                    <th>Address City</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Date Registered</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Date of Birth</th>
+                    <th>Address City</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr>
+                    <td>2011/04/25</td>
+                    <td>Testing</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2011/07/25</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>2009/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2020/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2019/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2018/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2017/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2016/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2015/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                <tr>
+                    <td>2014/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2013/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2012/01/12</td>
+                    <td>Firstname</td>
+                    <td>Lastname</td>
+                    <td>Date of Birth</td>
+                    <td>Address City</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal2"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+
+                
+            </tbody>
+        </table>  
+    </div>
+    <br>
+    <br>
+
+    <div class="Dashboard">
+        <h1 align="center">Medicine Report Summary</h1>
+        <table border="0" cellspacing="5" cellpadding="5" align="center">
+            <tbody>
+                <tr>
+                    <td>From:</td>
+                    <td><input name="min1" id="min1" type="text"></td>
+                    <td>To:</td>
+                    <td><input name="max1" id="max1" type="text"></td>
+                    <td>
+                        <form id="form1" action="" method="POST" autocomplete="off" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <td><a href="http://127.0.0.1:8000/Medicine/registration" class="btn btn-success">Add Medicine</a></td>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table width="100%" class="table-striped table-bordered table-sm" id="example1" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Date Manufactured</th>
+                    <th>Expiry Date</th>
+                    <th>Generic Name</th>
+                    <th>Common Brand</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>No. of Items</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Date Manufactured</th>
+                    <th>Expiry Date</th>
+                    <th>Generic Name</th>
+                    <th>Common Brand</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>No. of Items</th>
+                    <th></th>
+        
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for medicine in medicines %}
+                <tr>
+                    <td>{{medicine.manufacturedDate}}</td>
+                    <td>{{medicine.expiryDate}}</td>
+                    <td>{{medicine.genericName}}</td>
+                    <td>{{medicine.commonBrand}}</td>
+                    <td>{{medicine.size}}</td>
+                    <td>{{medicine.price}}</td>
+                    <td>{{medicine.noOfItems}}</td>
+                    <td align="center">
+                        <button class="btnView" data-toggle="modal" data-target="#viewModal-{{medicine.SKU}}"><i class="fa fa-eye"></i> View</button>
+                        <button class="btnDel" data-toggle="modal" data-target="#delModal"><i class="fa fa-trash"></i> Delete</button>
+                    </td>
+                </tr>
+
+                <!--MODAL VIEW-->
+            <div class="modal fade" id="viewModal-{{medicine.SKU}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header text-center" style="background-color: #4CAF50;">
+                        <h5 class="modal-title" id="exampleModalLabel"><b>MEDICINE INFORMATION</b></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class = "row">
+                            <div class = "col-sm-6">
+                              <label>Date Registered</label>
+                              <input type="date" class="form-control" id="id-dateregistered" placeholder="Date Registered" value ="{{medicine.dateRegistered|date:"Y-m-d"}}">
+                            </div>
+                            <div class = "col-sm-6">
+                              <label>SKU</label>
+                              <input type="number" class="form-control" id="id-employeeID" placeholder="Employee ID" value ="{{medicine.SKU}}">
+                            </div>
+                        </div><br/>
+                        <div class = "row">
+                            <div class = "col-sm-6">
+                              <label>Category</label>
+                              <input type="text" class="form-control" id="id-dateregistered" placeholder="Date Registered" value ="{{medicine.category}}">
+                            </div>
+                            <div class = "col-sm-6">
+                              <label>Generic Name</label>
+                              <input type="text" class="form-control" id="id-employeeID" placeholder="Employee ID" value ="{{medicine.genericName}}">
+                            </div>
+                          </div><br/>
+                          <div class = "row">
+                            <div class = "col-sm-6">
+                              <label>Common Brand</label>
+                              <input type="text" class="form-control" id="id-dateregistered" placeholder="Date Registered" value ="{{medicine.commonBrand}}">
+                            </div>
+                            <div class = "col-sm-6">
+                              <label>Date Manufactured</label>
+                              <input type="date" class="form-control" id="id-employeeID" placeholder="Employee ID" value ="{{medicine.manufacturedDate|date:"Y-m-d"}}">
+                            </div>
+                          </div><br/>
+                          <div class = "row">
+                            <div class = "col-sm-6">
+                              <label>Expiry Date</label>
+                              <input type="date" class="form-control" id="id-dateregistered" placeholder="Date Registered" value ="{{medicine.expiryDate|date:"Y-m-d"}}">
+                            </div>
+                            <div class = "col-sm-6">
+                              <label>Size</label>
+                              <input type="number" class="form-control" id="id-employeeID" placeholder="Employee ID" value ="{{medicine.size}}">
+                            </div>
+                          </div>
+                          <form>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">How To Use:</label>
+                                <textarea class="form-control" id="message-text">{{medicine.howToUse}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Side Effects:</label>
+                                <textarea class="form-control" id="message-text">{{medicine.sideEffects}}</textarea>
+                            </div>
+                        </form>
+                        <div class = "row">
+                            <div class = "col-sm-6">
+                              <label>Price</label>
+                              <input type="number" class="form-control" id="id-dateregistered" placeholder="Date Registered" value ="{{medicine.price}}">
+                            </div>
+                            <div class = "col-sm-6">
+                              <label>Number of Items</label>
+                              <input type="number" class="form-control" id="id-employeeID" placeholder="Employee ID" value ="{{medicine.noOfItems}}">
+                            </div>
+    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+                        <button type="button" class="btn btn-primary">UPDATE</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                 
+                {% endfor %}
+                
+            </tbody>
+        </table>    
+    </div>
+    {% endblock content %}
+    
+
+            <!-- <div class="modal fade" id="viewModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">CUSTOMER INFORMATION</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class = "row">
+                        <div class = "col-sm-4">
+                        <input type="text" class="form-control" id="id-firstname" placeholder="Firstname">
+                        </div>
+                        <div class = "col-sm-4">
+                        <input type="text" class="form-control" id="id-lastname" placeholder="Lastname">
+                        </div>
+                        <div class = "col-sm-4">
+                        <input type="text" class="form-control" id="id-address" placeholder="Address">
+                        </div>
+                    </div>
+                    <div class = "row" style="padding: 10px 0px;">
+                    <label for="date" class="col-sm-3 col-form-label">Birthdate</label>
+                    <div class="col-sm-5">
+                    <input type="date" class="form-control" id="expiry-date" >
+                    </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-primary">UPDATE</button>
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+    <div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">ARE YOU SURE?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              </div>
+              <button type="button" class="btn btn-primary">YES</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">NO</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+
+    
+    </div>
